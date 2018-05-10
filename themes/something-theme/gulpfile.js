@@ -2,6 +2,8 @@ const gulp = require("gulp");
 const postcss = require("gulp-postcss");
 const purgecss = require("gulp-purgecss");
 const tailwindcss = require("tailwindcss");
+const { production, development } = require("gulp-environments");
+const cleanCSS = require("gulp-clean-css");
 
 const PATHS = {
   css: {
@@ -15,21 +17,18 @@ const PATHS = {
 };
 
 gulp.task("css", () => {
-  return (
-    gulp
-      .src(PATHS.css.src)
-      .pipe(
-        postcss([
-          tailwindcss(PATHS.css.tailwindConfig),
-          require("autoprefixer")
-        ])
+  return gulp
+    .src(PATHS.css.src)
+    .pipe(
+      postcss([tailwindcss(PATHS.css.tailwindConfig), require("autoprefixer")])
+    )
+    .pipe(
+      production(
+        purgecss({
+          content: [PATHS.ejs.src]
+        })
       )
-      //TODO: For Prod build make sure this is ran.
-      // .pipe(
-      //   purgecss({
-      //     content: [PATHS.ejs.src]
-      //   })
-      // )
-      .pipe(gulp.dest(PATHS.css.dist))
-  );
+    )
+    .pipe(production(cleanCSS()))
+    .pipe(gulp.dest(PATHS.css.dist));
 });
