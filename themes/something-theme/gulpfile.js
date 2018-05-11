@@ -14,7 +14,7 @@ const PATHS = {
   },
   js: {
     src: "./source/_js/app.js",
-    dist: "./source"
+    dist: "./source/"
   },
   ejs: {
     src: `./layout/**/*.ejs`
